@@ -10,6 +10,7 @@ const morgan = require('morgan');
 //	routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const productRoutes = require('./routes/products');
 
 const connectDB = () => {
   return mongoose.connect(process.env.MONGO_URI);
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
 
 //	error handler
 app.use((err, req, res, next) => {

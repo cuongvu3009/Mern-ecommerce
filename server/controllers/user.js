@@ -5,7 +5,10 @@ const bcrypt = require('bcryptjs');
 const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+
+    //	filter password
+    const { password, ...other } = user._doc;
+    res.status(200).json(other);
   } catch (error) {
     next(error);
   }
