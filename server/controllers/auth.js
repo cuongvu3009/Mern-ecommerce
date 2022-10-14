@@ -52,14 +52,18 @@ const login = async (req, res, next) => {
     const { password, ...other } = user._doc;
 
     //	provide token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SEC, {
-      expiresIn: '30d',
-    });
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SEC,
+      {
+        expiresIn: '30d',
+      }
+    );
 
     res
       .cookie('access_token', token, { httpOnly: true })
       .status(200)
-      .json(other);
+      .json({ ...other, token });
   } catch (error) {
     next(error);
   }
