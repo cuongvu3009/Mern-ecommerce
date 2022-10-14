@@ -1,9 +1,14 @@
 import React from 'react';
-import Announcement from '../components/Announcement';
-import Categories from '../components/Categories';
-import Navbar from '../components/Navbar';
-import ProductList from '../components/Products';
-import Slider from '../components/Slider';
+
+import {
+  Announcement,
+  Categories,
+  Navbar,
+  Slider,
+  Newsletter,
+  Footer,
+  Products,
+} from '../components';
 
 const Home = () => {
   return (
@@ -12,7 +17,9 @@ const Home = () => {
       <Navbar />
       <Slider />
       <Categories />
-      <ProductList />
+      <Products />
+      <Newsletter />
+      <Footer />
     </div>
   );
 };
