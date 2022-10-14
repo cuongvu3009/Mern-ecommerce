@@ -4,6 +4,10 @@ const app = express();
 
 //	packages
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+
+//	routes
+const authRoutes = require('./routes/auth');
 
 const connectDB = () => {
   return mongoose.connect(process.env.MONGO_URI);
@@ -11,11 +15,13 @@ const connectDB = () => {
 
 //	middleware
 app.use(express.json());
+app.use(cookieParser());
 
 //	routes
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
+app.use('/api/v1/auth', authRoutes);
 
 //	error handler
 app.use((err, req, res, next) => {
