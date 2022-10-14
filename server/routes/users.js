@@ -8,7 +8,6 @@ const {
   deleteUser,
 } = require('../controllers/user');
 const {
-  verifyToken,
   verifyTokenAndAdmin,
   verifyTokenAndAuthorization,
 } = require('../utils/verifyToken');

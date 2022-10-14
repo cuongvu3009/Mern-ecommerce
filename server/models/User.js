@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
     img: {
       type: String,
     },
+    updated_password: {
+      type: String,
+      default: Date(),
+    },
   },
   { timestamps: true }
 );
