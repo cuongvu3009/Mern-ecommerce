@@ -13,8 +13,23 @@ const createProduct = async (req, res, next) => {
 };
 
 const getAllUProduct = async (req, res, next) => {
+  const qNew = req.query.new;
+  const qCategory = req.query.category;
   try {
-    const products = await Product.find();
+    let products;
+
+    if (qNew) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(1);
+    } else if (qCategory) {
+      products = await Product.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      products = await Product.find();
+    }
+
     res.status(200).json(products);
   } catch (error) {
     next(error);
