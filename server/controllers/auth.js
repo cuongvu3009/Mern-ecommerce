@@ -34,7 +34,7 @@ const login = async (req, res, next) => {
     }
 
     //	check if email exist
-    const user = await User.findOne({ email: req.body.emaili });
+    const user = await User.findOne({ email: req.body.email });
     if (!user)
       return next(
         createError(404, `Cannot find this email, please try again!`)
@@ -48,11 +48,18 @@ const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(403, 'Invalid credential!'));
 
+    //	filter password
+    const { password, ...other } = user._doc;
+
     //	provide token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SEC, {
       expiresIn: '30d',
     });
-    res.status(200).json();
+
+    res
+      .cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json(other);
   } catch (error) {
     next(error);
   }
