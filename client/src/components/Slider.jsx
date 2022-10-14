@@ -1,7 +1,4 @@
-import {
-  BsFillArrowLeftCircleFill,
-  BsFillArrowRightCircleFill,
-} from 'react-icons/bs';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@material-ui/icons';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { sliderItems } from '../data';
@@ -95,7 +92,7 @@ const Slider = () => {
   return (
     <Container>
       <Arrow direction='left' onClick={() => handleClick('left')}>
-        <BsFillArrowLeftCircleFill />
+        <ArrowLeftOutlined />
       </Arrow>
       <Wrapper slideIndex={slideIndex}>
         {sliderItems.map((item) => (
@@ -112,7 +109,7 @@ const Slider = () => {
         ))}
       </Wrapper>
       <Arrow direction='right' onClick={() => handleClick('right')}>
-        <BsFillArrowRightCircleFill />
+        <ArrowRightOutlined />
       </Arrow>
     </Container>
   );

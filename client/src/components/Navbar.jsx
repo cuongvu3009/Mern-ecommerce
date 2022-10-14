@@ -1,11 +1,11 @@
-import { BsSearch } from 'react-icons/bs';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { Badge } from '@material-ui/core';
+import { Search, ShoppingCartOutlined } from '@material-ui/icons';
 import React from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 
 const Container = styled.div`
-  height: 66px;
+  height: 60px;
   ${mobile({ height: '50px' })}
 `;
 
@@ -66,25 +66,6 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: '12px', marginLeft: '10px' })}
 `;
 
-const Badge = styled.div`
-  display: flex;
-  position: relative;
-  padding: 18px;
-`;
-
-const CartInfo = styled.p`
-  color: red;
-  font-weight: bold;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin: 35px;
-  background-color: green;
-  padding: 5px;
-  border-radius: 50%;
-  z-index: 99;
-`;
-
 const Navbar = () => {
   return (
     <Container>
@@ -93,19 +74,18 @@ const Navbar = () => {
           <Language>EN</Language>
           <SearchContainer>
             <Input placeholder='Search' />
-            <BsSearch style={{ color: 'gray', fontSize: 16 }} />
+            <Search style={{ color: 'gray', fontSize: 16 }} />
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>STORE.</Logo>
+          <Logo>LAMA.</Logo>
         </Center>
         <Right>
           <MenuItem>REGISTER</MenuItem>
           <MenuItem>SIGN IN</MenuItem>
           <MenuItem>
-            <Badge>
-              <CartInfo>20</CartInfo>
-              <AiOutlineShoppingCart size={30} />
+            <Badge badgeContent={4} color='primary'>
+              <ShoppingCartOutlined />
             </Badge>
           </MenuItem>
         </Right>
