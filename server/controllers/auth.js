@@ -52,7 +52,7 @@ const login = async (req, res, next) => {
     const { password, ...other } = user._doc;
 
     //	provide token
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT_SEC,
       {
@@ -61,9 +61,9 @@ const login = async (req, res, next) => {
     );
 
     res
-      .cookie('access_token', token, { httpOnly: true })
+      .cookie('accessToken', accessToken, { httpOnly: true })
       .status(200)
-      .json({ ...other, token });
+      .json({ ...other, accessToken });
   } catch (error) {
     next(error);
   }
