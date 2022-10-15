@@ -1,4 +1,5 @@
 import { Add, Remove } from '@material-ui/icons';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Announcement from '../components/Announcement';
 import Footer from '../components/Footer';
