@@ -6,6 +6,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 //	routes
 const authRoutes = require('./routes/auth');
@@ -20,6 +21,7 @@ const connectDB = () => {
 };
 
 //	middleware
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('tiny'));
