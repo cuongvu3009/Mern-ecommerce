@@ -13,6 +13,7 @@ const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/carts');
 const orderRoutes = require('./routes/orders');
+const stripeRoutes = require('./routes/stripe');
 
 const connectDB = () => {
   return mongoose.connect(process.env.MONGO_URI);
@@ -32,6 +33,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/carts', cartRoutes);
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/checkout', stripeRoutes);
 
 //	error handler
 app.use((err, req, res, next) => {
