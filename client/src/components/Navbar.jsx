@@ -78,7 +78,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
-  console.log(currentUser);
+
   return (
     <Container>
       <Wrapper>
@@ -105,7 +105,7 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <Link to='/login' className='styledLink' onClick={handleLogout}>
+            <Link to='/' className='styledLink' onClick={handleLogout}>
               <MenuItem>LOGOUT</MenuItem>
             </Link>
           )}

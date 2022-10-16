@@ -175,7 +175,9 @@ const Cart = () => {
           amount: cart.total * 100,
         });
         navigate('/success');
-      } catch {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     stripeToken && makeRequest();
   }, [stripeToken, cart.total, navigate]);
