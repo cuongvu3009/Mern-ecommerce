@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 
@@ -55,17 +56,41 @@ const Button = styled.button`
 `;
 
 const Register = () => {
+  const [fName, setFName] = useState('');
+  const [lName, setLName] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const checkPasswordMatch = () => {
+    if (password !== confirmPassword) {
+      setPassword('');
+      setConfirmPassword('');
+      setError('Password does not match!');
+    } else {
+      setError('');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setName(fName + lName);
+    console.log(name);
+  };
+
   return (
     <Container>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Input placeholder='name' />
           <Input placeholder='last name' />
           <Input placeholder='username' />
           <Input placeholder='email' />
           <Input placeholder='password' />
-          <Input placeholder='confirm password' />
+
           <Agreement>
             By creating an account, I consent to the processing of my personal
             data in accordance with the <b>PRIVACY POLICY</b>
