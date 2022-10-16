@@ -1,5 +1,10 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
+import { publicRequest } from '../requestMethods';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100vw;
@@ -57,15 +62,48 @@ const Link = styled.a`
   cursor: pointer;
 `;
 
+const Error = styled.span`
+  color: red;
+`;
+
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const { isFetching, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const res = await publicRequest.post('/auth/login', { email, password });
+      dispatch(loginSuccess(res.data));
+      navigate('/');
+    } catch (error) {
+      dispatch(loginFailure());
+      console.log(error);
+    }
+  };
   return (
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        <Form>
-          <Input placeholder='username' />
-          <Input placeholder='password' />
-          <Button>LOGIN</Button>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            type='email'
+            placeholder='email'
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type='password'
+            placeholder='password'
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type='submit' disabled={isFetching}>
+            LOGIN
+          </Button>
+          {error && <Error>Something went wrong...</Error>}
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
           <Link>CREATE A NEW ACCOUNT</Link>
         </Form>
