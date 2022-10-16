@@ -2,7 +2,15 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CategoryItem } from './components';
 
-import { Home, Login, Register, ProductList, Product, Cart } from './pages';
+import {
+  Home,
+  Login,
+  Register,
+  ProductList,
+  Product,
+  Cart,
+  NotFound,
+} from './pages';
 import { Navigate } from 'react-router-dom';
 
 function App() {
@@ -48,6 +56,8 @@ function App() {
             path='/register'
             element={user ? <Register /> : <Navigate to='/' replace />}
           />
+
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>
