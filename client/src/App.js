@@ -10,6 +10,7 @@ import {
   Product,
   Cart,
   NotFound,
+  Success,
 } from './pages';
 import { Navigate } from 'react-router-dom';
 
@@ -34,6 +35,9 @@ function App() {
 
           {/* single product route */}
           <Route path='/product/:id' element={<Product />} />
+
+          {/* success route */}
+          <Route path='/success' element={<Success />} />
 
           {/* login route */}
           <Route

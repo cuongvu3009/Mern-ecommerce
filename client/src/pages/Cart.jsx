@@ -10,8 +10,6 @@ import { useEffect, useState } from 'react';
 import { userRequest } from '../requestMethods';
 import { useNavigate } from 'react-router';
 
-const KEY = process.env.REACT_APP_STRIPE;
-
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -163,6 +161,7 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [stripeToken, setStripeToken] = useState(null);
   const navigate = useNavigate();
+  const KEY = process.env.REACT_APP_STRIPE;
 
   const onToken = (token) => {
     setStripeToken(token);
@@ -171,18 +170,16 @@ const Cart = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const res = await userRequest.post('/checkout/payment', {
+        await userRequest.post('/checkout', {
           tokenId: stripeToken.id,
-          amount: 500,
+          amount: cart.total * 100,
         });
-        navigate('/success', {
-          stripeData: res.data,
-          products: cart,
-        });
+        navigate('/success');
       } catch {}
     };
     stripeToken && makeRequest();
   }, [stripeToken, cart.total, navigate]);
+
   return (
     <Container>
       <Navbar />
