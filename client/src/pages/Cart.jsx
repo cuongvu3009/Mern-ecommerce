@@ -9,6 +9,9 @@ import StripeCheckout from 'react-stripe-checkout';
 import { useEffect, useState } from 'react';
 import { userRequest } from '../requestMethods';
 import { useNavigate } from 'react-router';
+import { addProducts, removeProducts, clearCart } from '../redux/cartSlice';
+import { useDispatch } from 'react-redux';
+import { stripeData } from '../redux/stripeSlice';
 
 const Container = styled.div``;
 
@@ -161,6 +164,7 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [stripeToken, setStripeToken] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const KEY = process.env.REACT_APP_STRIPE;
 
   const onToken = (token) => {
@@ -170,22 +174,28 @@ const Cart = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await userRequest.post('/checkout', {
+        const res = await userRequest.post('/checkout', {
           tokenId: stripeToken.id,
           amount: cart.total * 100,
         });
+        dispatch(stripeData({ ...res.data }));
+
         navigate('/success');
+        dispatch(clearCart());
       } catch (error) {
         console.log(error);
       }
     };
     stripeToken && makeRequest();
-  }, [stripeToken, cart.total, navigate]);
+  }, [dispatch, stripeToken, cart.total, navigate]);
+
+  console.log(stripeData);
 
   return (
     <Container>
       <Navbar />
       <Announcement />
+
       <Wrapper>
         <Title>YOUR BAG</Title>
         <Top>
@@ -193,6 +203,12 @@ const Cart = () => {
           <TopTexts>
             <TopText>Shopping Bag(2)</TopText>
             <TopText>Your Wishlist (0)</TopText>
+            <TopText
+              style={{ backgroundColor: 'red' }}
+              onClick={() => dispatch(clearCart())}
+            >
+              CLEAR CART
+            </TopText>
           </TopTexts>
           <TopButton type='filled'>CHECKOUT NOW</TopButton>
         </Top>
@@ -209,7 +225,9 @@ const Cart = () => {
                     <ProductId>
                       <b>ID:</b> {product._id}
                     </ProductId>
-                    <ProductColor color={product.color} />
+                    <ProductColor color={product.color}>
+                      <b>Color:</b> {product.color}
+                    </ProductColor>
                     <ProductSize>
                       <b>Size:</b> {product.size}
                     </ProductSize>
@@ -217,9 +235,13 @@ const Cart = () => {
                 </ProductDetail>
                 <PriceDetail>
                   <ProductAmountContainer>
-                    <Add />
+                    <Add
+                      onClick={() => dispatch(addProducts({ ...product }))}
+                    />
                     <ProductAmount>{product.quantity}</ProductAmount>
-                    <Remove />
+                    <Remove
+                      onClick={() => dispatch(removeProducts({ ...product }))}
+                    />
                   </ProductAmountContainer>
                   <ProductPrice>
                     $ {product.price * product.quantity}
@@ -229,6 +251,7 @@ const Cart = () => {
             ))}
             <Hr />
           </Info>
+
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
@@ -257,7 +280,8 @@ const Cart = () => {
               token={onToken}
               stripeKey={KEY}
             >
-              <Button>CHECKOUT NOW</Button>
+              <Button type='submit'>CHECKOUT NOW</Button>
+              <hr />
             </StripeCheckout>
           </Summary>
         </Bottom>
