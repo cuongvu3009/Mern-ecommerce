@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,13 +55,6 @@ const Button = styled.button`
   margin-bottom: 10px;
 `;
 
-// const Link = styled.a`
-//   margin: 5px 0px;
-//   font-size: 12px;
-//   text-decoration: underline;
-//   cursor: pointer;
-// `;
-
 const Error = styled.span`
   color: red;
 `;
@@ -76,7 +69,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post('/auth/login', { email, password });
+      const res = await axios.post('/api/v1/auth/login', { email, password });
       dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure());

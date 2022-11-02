@@ -171,9 +171,9 @@ const Cart = () => {
   useEffect(() => {
     const request = async () => {
       try {
-        const res = await axios.post('/checkout', {
+        const res = await axios.post('/api/v1/checkout', {
           tokenId: stripeToken.id,
-          amount: 500,
+          amount: cart.total * 100,
         });
         history.push('/success', {
           stripeData: res.data,

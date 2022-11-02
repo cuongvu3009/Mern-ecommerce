@@ -77,7 +77,7 @@ const Register = () => {
 
     if (!passwordError) {
       try {
-        await axios.post('/auth/register', { name, email, password });
+        await axios.post('/api/v1/auth/register', { name, email, password });
         setName('');
         setEmail('');
         setPassword('');
