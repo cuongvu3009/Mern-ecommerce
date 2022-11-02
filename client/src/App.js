@@ -1,61 +1,51 @@
-import { useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CategoryItem } from './components';
-
+import Product from './pages/Product';
+import Home from './pages/Home';
+import ProductList from './pages/ProductList';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Cart from './pages/Cart';
 import {
-  Home,
-  Login,
-  Register,
-  ProductList,
-  Product,
-  Cart,
-  NotFound,
-  Success,
-} from './pages';
-import { Navigate } from 'react-router-dom';
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+import Success from './pages/Success';
+import { useSelector } from 'react-redux';
+import Test from './pages/Test';
 
-function App() {
-  const { currentUser } = useSelector((state) => state.user);
+const App = () => {
+  const user = useSelector((state) => state.user.currentUser);
 
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          {/* home route */}
-          <Route path='/' exact element={<Home />} />
+    <Router>
+      <Switch>
+        <Route exact path='/'>
+          <Home />
+        </Route>
+        <Route path='/products/:category'>
+          <ProductList />
+        </Route>
+        <Route path='/product/:id'>
+          <Product />
+        </Route>
+        <Route path='/cart'>
+          <Cart />
+        </Route>
+        <Route path='/success'>
+          <Success />
+        </Route>
+        <Route path='/login'>{user ? <Redirect to='/' /> : <Login />}</Route>
+        <Route path='/register'>
+          {user ? <Redirect to='/' /> : <Register />}
+        </Route>
 
-          {/* cart route */}
-          <Route
-            path='/cart'
-            element={currentUser ? <Cart /> : <Navigate to='/login' replace />}
-          />
-
-          {/* product list route */}
-          <Route path='/products/:category' element={<ProductList />} />
-
-          {/* single product route */}
-          <Route path='/product/:id' element={<Product />} />
-
-          {/* success route */}
-          <Route path='/success' element={<Success />} />
-
-          {/* login route */}
-          <Route
-            path='/login'
-            element={!currentUser ? <Login /> : <Navigate to='/' replace />}
-          />
-
-          {/* register route */}
-          <Route
-            path='/register'
-            element={!currentUser ? <Register /> : <Navigate to='/' replace />}
-          />
-
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+        <Route path='/test'>
+          <Test />
+        </Route>
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;

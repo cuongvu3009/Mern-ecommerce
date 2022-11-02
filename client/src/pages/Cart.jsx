@@ -7,11 +7,10 @@ import Navbar from '../components/Navbar';
 import { mobile } from '../responsive';
 import StripeCheckout from 'react-stripe-checkout';
 import { useEffect, useState } from 'react';
-import { userRequest } from '../requestMethods';
-import { useNavigate } from 'react-router';
-import { addProducts, removeProducts, clearCart } from '../redux/cartSlice';
-import { useDispatch } from 'react-redux';
-import { stripeData } from '../redux/stripeSlice';
+import { useHistory } from 'react-router';
+import axios from 'axios';
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 
@@ -163,39 +162,34 @@ const Button = styled.button`
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [stripeToken, setStripeToken] = useState(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const KEY = process.env.REACT_APP_STRIPE;
+  const history = useHistory();
 
   const onToken = (token) => {
     setStripeToken(token);
   };
 
   useEffect(() => {
-    const makeRequest = async () => {
+    const request = async () => {
       try {
-        const res = await userRequest.post('/checkout', {
+        const res = await axios.post('/checkout', {
           tokenId: stripeToken.id,
-          amount: cart.total * 100,
+          amount: 500,
         });
-        dispatch(stripeData({ ...res.data }));
-
-        navigate('/success');
-        dispatch(clearCart());
-      } catch (error) {
-        console.log(error);
+        history.push('/success', {
+          stripeData: res.data,
+          products: cart,
+        });
+      } catch (err) {
+        console.log(err);
       }
     };
-    stripeToken && makeRequest();
-  }, [dispatch, stripeToken, cart.total, navigate]);
-
-  console.log(stripeData);
+    stripeToken && request();
+  }, [stripeToken, cart.total, history, cart]);
 
   return (
     <Container>
       <Navbar />
       <Announcement />
-
       <Wrapper>
         <Title>YOUR BAG</Title>
         <Top>
@@ -203,12 +197,6 @@ const Cart = () => {
           <TopTexts>
             <TopText>Shopping Bag(2)</TopText>
             <TopText>Your Wishlist (0)</TopText>
-            <TopText
-              style={{ backgroundColor: 'red' }}
-              onClick={() => dispatch(clearCart())}
-            >
-              CLEAR CART
-            </TopText>
           </TopTexts>
           <TopButton type='filled'>CHECKOUT NOW</TopButton>
         </Top>
@@ -225,9 +213,7 @@ const Cart = () => {
                     <ProductId>
                       <b>ID:</b> {product._id}
                     </ProductId>
-                    <ProductColor color={product.color}>
-                      <b>Color:</b> {product.color}
-                    </ProductColor>
+                    <ProductColor color={product.color} />
                     <ProductSize>
                       <b>Size:</b> {product.size}
                     </ProductSize>
@@ -235,13 +221,9 @@ const Cart = () => {
                 </ProductDetail>
                 <PriceDetail>
                   <ProductAmountContainer>
-                    <Add
-                      onClick={() => dispatch(addProducts({ ...product }))}
-                    />
+                    <Add />
                     <ProductAmount>{product.quantity}</ProductAmount>
-                    <Remove
-                      onClick={() => dispatch(removeProducts({ ...product }))}
-                    />
+                    <Remove />
                   </ProductAmountContainer>
                   <ProductPrice>
                     $ {product.price * product.quantity}
@@ -251,7 +233,6 @@ const Cart = () => {
             ))}
             <Hr />
           </Info>
-
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
@@ -280,8 +261,7 @@ const Cart = () => {
               token={onToken}
               stripeKey={KEY}
             >
-              <Button type='submit'>CHECKOUT NOW</Button>
-              <hr />
+              <Button>CHECKOUT NOW</Button>
             </StripeCheckout>
           </Summary>
         </Bottom>

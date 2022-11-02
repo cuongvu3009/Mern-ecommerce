@@ -130,9 +130,7 @@ const Product = () => {
 
   useEffect(() => {
     const getProduct = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/products/find/${id}`
-      );
+      const res = await axios.get(`/products/find/${id}`);
       setProduct(res.data);
     };
     getProduct();

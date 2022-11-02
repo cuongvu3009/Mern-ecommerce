@@ -1,13 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  amount: 0,
-  amount_captured: 0,
-  created: null,
-  currency: 'usd',
-  userId: null,
-  receipt_url: null,
-  status: '',
+  paymentId: '',
+  address: {},
 };
 
 const stripeSlice = createSlice({
@@ -15,12 +10,8 @@ const stripeSlice = createSlice({
   initialState,
   reducers: {
     stripeData: (state, action) => {
-      state.amount = action.payload.amount;
-      state.amount_captured = action.payload.amount_captured;
-      state.currency = action.payload.currency;
-      state.userId = action.payload.userId;
-      state.receipt_url = action.payload.receipt_url;
-      state.status = action.payload.status;
+      state.paymentId = action.payload.id;
+      state.address = action.payload.billing_details.address;
     },
   },
 });

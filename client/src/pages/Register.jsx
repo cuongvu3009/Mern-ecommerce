@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 import { Link } from 'react-router-dom';
-import { publicRequest } from '../requestMethods';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 100vw;
@@ -64,7 +63,6 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (password !== confirmPassword) {
@@ -79,11 +77,10 @@ const Register = () => {
 
     if (!passwordError) {
       try {
-        await publicRequest.post('/auth/register', { name, email, password });
+        await axios.post('/auth/register', { name, email, password });
         setName('');
         setEmail('');
         setPassword('');
-        navigate('/login');
       } catch (error) {
         console.log(error);
       }

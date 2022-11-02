@@ -10,10 +10,11 @@ const {
 const {
   verifyTokenAndAdmin,
   verifyTokenAndAuthorization,
+  verifyToken,
 } = require('../utils/verifyToken');
 
 //	get all users
-router.get('/', verifyTokenAndAdmin, getAllUsers);
+router.get('/', verifyToken, getAllUsers);
 
 //	find specific user
 router.get('/find/:id', verifyTokenAndAdmin, getUser);
@@ -26,5 +27,18 @@ router.delete('/:id', verifyTokenAndAuthorization, deleteUser);
 
 //	get user stat
 router.get('/stats', verifyTokenAndAdmin, getUserStat);
+
+//	testing
+router.get('/checktoken', verifyToken, (req, res) => {
+  res.json(req.user);
+});
+
+router.get('/checkadmin/:id', verifyTokenAndAdmin, (req, res) => {
+  res.json(req.user);
+});
+
+router.get('/checkuser/:id', verifyTokenAndAuthorization, (req, res) => {
+  res.send(req.user);
+});
 
 module.exports = router;

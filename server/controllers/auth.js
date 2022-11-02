@@ -28,11 +28,6 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    //	check if email and password typed
-    if (!req.body.email || !req.body.password) {
-      return next(createError(404, 'Please provide email and password'));
-    }
-
     //	check if email exist
     const user = await User.findOne({ email: req.body.email });
     if (!user)
@@ -48,18 +43,14 @@ const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(403, 'Invalid credential!'));
 
-    //	filter password
-    const { password, ...other } = user._doc;
-
     //	provide token
     const accessToken = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin, name: user.name },
-      process.env.JWT_SEC,
-      {
-        expiresIn: '30d',
-      }
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SEC
     );
 
+    //	filter password
+    const { password, ...other } = user._doc;
     res
       .cookie('accessToken', accessToken, { httpOnly: true })
       .status(200)

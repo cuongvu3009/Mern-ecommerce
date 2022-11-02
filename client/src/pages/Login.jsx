@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { mobile } from '../responsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
-import { publicRequest } from '../requestMethods';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
@@ -72,20 +71,19 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await publicRequest.post('/auth/login', { email, password });
+      const res = await axios.post('/auth/login', { email, password });
       dispatch(loginSuccess(res.data));
-      navigate('/');
     } catch (error) {
       dispatch(loginFailure());
       console.log(error);
     }
   };
+
   return (
     <Container>
       <Wrapper>
